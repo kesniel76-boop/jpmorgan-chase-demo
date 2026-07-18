@@ -1,0 +1,58 @@
+export const users = [
+  {
+    id: 1,
+    customerId: "JPM-CUST-1001",
+    accountNumber: "PCB001234567",
+    name: "John David",
+    email: "john@pencraft.com",
+    bank: "JP Morgan Chase",
+    balance: 250000,
+  },
+  {
+    id: 2,
+    customerId: "JPM-CUST-1002",
+    accountNumber: "UBA001987654",
+    name: "Mary Johnson",
+    email: "mary@example.com",
+    bank: "UBA",
+    balance: 450000,
+  },
+  {
+    id: 3,
+    customerId: "JPM-CUST-1003",
+    accountNumber: "GTB001456789",
+    name: "Michael Smith",
+    email: "michael@example.com",
+    bank: "GTBank",
+    balance: 125000,
+  },
+  {
+    id: 4,
+    customerId: "JPM-CUST-1004",
+    accountNumber: "ACC001234890",
+    name: "Sarah Williams",
+    email: "sarah@example.com",
+    bank: "Access Bank",
+    balance: 300000,
+  },
+  {
+    id: 5,
+    customerId: "JPM-CUST-1005",
+    accountNumber: "ZEN001765432",
+    name: "Daniel Brown",
+    email: "daniel@example.com",
+    bank: "Zenith Bank",
+    balance: 520000,
+  },
+  {
+    id: 6,
+    customerId: "JPM-CUST-1006",
+    accountNumber: "5528730869",
+    name: "GODWIN AWHOEHO",
+    email: "godwin@gmail.com",
+    bank: "MoniePoint",
+    balance: 520000,
+  },
+];
+
+export default users;
