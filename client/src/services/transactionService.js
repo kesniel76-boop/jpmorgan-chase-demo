@@ -1,275 +1,171 @@
 import { addNotification } from "./notificationService";
 
+const API_URL = `${import.meta.env.VITE_API_URL}/api/transactions`;
 
-const API_URL = "http://localhost:5000/api/transactions";
-
-
-
-// GET CUSTOMER TRANSACTIONS FROM POSTGRESQL
-
-export async function getTransactions(customerId) {
-
+// ==========================================
+// GET TRANSACTIONS
+// ==========================================
+export async function getTransactions(customerId = null) {
   try {
+    const url = customerId
+      ? `${API_URL}/customer/${customerId}`
+      : API_URL;
 
-    const response = await fetch(
-      `${API_URL}/${customerId}`
-    );
-
+    const response = await fetch(url);
 
     const data = await response.json();
 
-
-    if(data.success){
-
-      return data.transactions;
-
+    if (!data.success) {
+      return [];
     }
 
+    return data.transactions || data.transfers || [];
 
-    return [];
-
-
-  } catch(error){
+  } catch (error) {
 
     console.error(
       "Failed to fetch transactions:",
       error
     );
 
-
     return [];
-
   }
-
 }
 
-
-
-
-
-
-// CREATE TRANSACTION IN POSTGRESQL
-
+// ==========================================
+// CREATE TRANSFER
+// ==========================================
 export async function saveTransaction(transaction) {
-
 
   try {
 
-
     const payload = {
-
-
-      reference:
-        transaction.reference ||
-        `TXN-${Date.now()}`,
-
-
-      customer_id:
+      customerId:
         transaction.customerId ||
         transaction.customer_id,
-
-
-      sender_name:
-        transaction.senderName ||
-        transaction.sender_name,
-
-
-      sender_account:
-        transaction.senderAccount ||
-        transaction.sender_account,
-
-
-      recipient_name:
-        transaction.recipient ||
-        transaction.recipient_name,
-
-
-      recipient_account:
-        transaction.recipientAccount ||
-        transaction.recipient_account,
-
 
       bank:
         transaction.bank,
 
+      recipientName:
+        transaction.recipient ||
+        transaction.recipient_name,
+
+      recipientAccount:
+        transaction.recipientAccount ||
+        transaction.recipient_account,
 
       amount:
         Number(transaction.amount),
 
-
       narration:
         transaction.narration ||
         transaction.description ||
-        "Transfer",
-
-
-      transaction_type:
-        transaction.type ||
-        "Transfer",
-
-
-      status:
-        transaction.status ||
-        "Pending"
-
+        ""
     };
 
-
-
-    const response = await fetch(
-      API_URL,
-      {
-
-        method:"POST",
-
-        headers:{
-          "Content-Type":"application/json"
-        },
-
-        body:JSON.stringify(payload)
-
-      }
-    );
-
-
+    const response = await fetch(API_URL, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(payload)
+    });
 
     const data = await response.json();
 
-
-
-    if(data.success){
-
-
-      addNotification(
-        "Transfer Submitted",
-        `Your transfer of $${Number(
-          transaction.amount
-        ).toLocaleString()} to ${
-          transaction.recipient
-        } has been submitted.`
-      );
-
-
-      return data.transaction;
-
-
+    if (!data.success) {
+      return null;
     }
 
+    addNotification(
+      "Transfer Submitted",
+      `Your transfer of $${Number(
+        payload.amount
+      ).toLocaleString()} to ${
+        payload.recipientName
+      } has been submitted.`
+    );
 
+    return data.transaction;
 
-    return null;
-
-
-
-  }catch(error){
-
+  } catch (error) {
 
     console.error(
       "Transaction creation failed:",
       error
     );
 
-
     return null;
-
   }
-
 }
 
+// ==========================================
+// APPROVE TRANSFER
+// ==========================================
+export async function approveTransaction(id) {
 
+  try {
 
+    const response = await fetch(
+      `${API_URL}/${id}/approve`,
+      {
+        method: "PUT"
+      }
+    );
 
+    const data = await response.json();
 
+    return data;
 
+  } catch (error) {
 
-// ADMIN APPROVAL (TEMPORARY)
-// We will connect this to backend later
+    console.error(error);
 
-export async function approveTransaction(id){
-
-
-  console.log(
-    "Approve transaction:",
-    id
-  );
-
-
+    return {
+      success: false
+    };
+  }
 }
 
-
-
-
-
-
-
-// CREATE DEPOSIT TRANSACTION
-
-export async function createDepositTransaction(transaction){
-
+// ==========================================
+// CREATE DEPOSIT
+// ==========================================
+export async function createDepositTransaction(transaction) {
 
   return saveTransaction({
-
-    reference:
-      `DEP-${Date.now()}`,
 
     customerId:
       transaction.customerId,
 
-    senderName:
-      "External Deposit",
-
-
-    senderAccount:
-      "",
-
+    bank:
+      "JP Morgan Chase",
 
     recipient:
       transaction.customerName ||
       "Customer Account",
 
-
     recipientAccount:
-      transaction.accountNumber ||
-      "",
-
-
-    bank:
-      "JP Morgan Chase",
-
+      transaction.accountNumber || "",
 
     amount:
       transaction.amount,
 
-
     narration:
       transaction.description ||
-      "Account funding",
-
-
-    type:
-      "Deposit",
-
-
-    status:
-      "Successful"
+      "Account Funding"
 
   });
 
-
 }
 
-
-
-
-
-
-
-// NO LONGER NEEDED WITH DATABASE
-
-export function clearTransactions(){
+// ==========================================
+// CLEAR TRANSACTIONS
+// ==========================================
+export function clearTransactions() {
 
   console.log(
-    "Transactions are stored in PostgreSQL"
+    "Transactions are stored in PostgreSQL."
   );
 
 }

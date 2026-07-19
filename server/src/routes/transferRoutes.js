@@ -1,10 +1,31 @@
 const express = require("express");
+
 const router = express.Router();
 
 const transferController = require("../controllers/transferController");
 
-// Customer creates a transfer
-router.post("/", transferController.createTransfer);
+// =====================================
+// ADMIN
+// =====================================
+
+// Get all transfers
+router.get("/", transferController.getAllTransfers);
+
+// Approve transfer
+router.put(
+  "/approve/:id",
+  transferController.approveTransfer
+);
+
+// =====================================
+// CUSTOMER
+// =====================================
+
+// Create transfer
+router.post(
+  "/",
+  transferController.createTransfer
+);
 
 // Customer transaction history
 router.get(
