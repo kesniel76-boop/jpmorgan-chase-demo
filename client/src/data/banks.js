@@ -18,6 +18,38 @@ const banks = [
   "Santander México",
   "Scotiabank México",
 
+  // Portugal 
+  "ActivoBank",
+  "Banco BPI",
+  "Banco CTT",
+  "Banco Montepio",
+  "Banco Português de Investimento (BPI)",
+  "Banco Santander Totta",
+  "Bankinter Portugal",
+  "Best Bank",
+  "Caixa Geral de Depósitos (CGD)",
+  "Crédito Agrícola",
+  "EuroBic",
+  "Millennium BCP",
+  "Novo Banco",
+
+  // Brazil
+  "Banco do Brasil",
+  "Bradesco",
+  "Caixa Econômica Federal",
+  "Itaú Unibanco",
+  "Santander Brasil",
+  "Banco Inter",
+  "Nubank",
+  "BTG Pactual",
+  "Banco Safra",
+  "Banco Original",
+  "C6 Bank",
+  "Sicoob",
+  "Sicredi",
+  "Banco Pan",
+  "Banco Daycoval",
+
   // Costa Rica
   "BAC Credomatic Costa Rica",
   "Banco Cathay",
